@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div style="position: absolute; left:0; top:50px; right:0; bottom:0;">
+@Html.DevExpress().WebDocumentViewer(settings => {
+    settings.Name = "WebDocumentViewer";
+    settings.Height = System.Web.UI.WebControls.Unit.Percentage(100);
+}).Bind(new CategoriesReport()).GetHtml()
+</div>
