@@ -19,7 +19,9 @@ Namespace AuthorizationService
             ' and to use a cookie to temporarily store information about a user logging in with a third party login provider
             ' Configure the sign in cookie
             app.UseCookieAuthentication(New CookieAuthenticationOptions With { _
-                .AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie, .LoginPath = New PathString("/Account/Login"), .Provider = New CookieAuthenticationProvider With {.OnValidateIdentity = SecurityStampValidator.OnValidateIdentity(Of ApplicationUserManager, ApplicationUser)(validateInterval:= TimeSpan.FromMinutes(30), regenerateIdentity:= Function(manager, user) user.GenerateUserIdentityAsync(manager))} _
+                .AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie, _
+                .LoginPath = New PathString("/Account/Login"), _
+                .Provider = New CookieAuthenticationProvider With {.OnValidateIdentity = SecurityStampValidator.OnValidateIdentity(Of ApplicationUserManager, ApplicationUser)(validateInterval:= TimeSpan.FromMinutes(30), regenerateIdentity:= Function(manager, user) user.GenerateUserIdentityAsync(manager))} _
             })
                     ' Enables the application to validate the security stamp when the user logs in.
                     ' This is a security feature which is used when you change a password or add an external login to your account.  

@@ -69,7 +69,10 @@ Namespace AuthorizationService.Controllers
                 Case SignInStatus.LockedOut
                     Return View("Lockout")
                 Case SignInStatus.RequiresVerification
-                    Return RedirectToAction("SendCode", New With {Key .ReturnUrl = returnUrl, Key .RememberMe = model.RememberMe})
+                    Return RedirectToAction("SendCode", New With { _
+                        Key .ReturnUrl = returnUrl, _
+                        Key .RememberMe = model.RememberMe _
+                    })
                 Case Else
                     ModelState.AddModelError("", "Invalid login attempt.")
                     Return View(model)
@@ -81,10 +84,14 @@ Namespace AuthorizationService.Controllers
         <AllowAnonymous> _
         Public Async Function VerifyCode(ByVal provider As String, ByVal returnUrl As String, ByVal rememberMe As Boolean) As Task(Of ActionResult)
             ' Require that the user has already logged in via username/password or external login
-            If Not(Await SignInManager.HasBeenVerifiedAsync()) Then
+            If Not (Await SignInManager.HasBeenVerifiedAsync()) Then
                 Return View("Error")
             End If
-            Return View(New VerifyCodeViewModel With {.Provider = provider, .ReturnUrl = returnUrl, .RememberMe = rememberMe})
+            Return View(New VerifyCodeViewModel With { _
+                .Provider = provider, _
+                .ReturnUrl = returnUrl, _
+                .RememberMe = rememberMe _
+            })
         End Function
 
         '
@@ -124,7 +131,10 @@ Namespace AuthorizationService.Controllers
         Public Async Function Register(ByVal model As RegisterViewModel) As Task(Of ActionResult)
             If ModelState.IsValid Then
 
-                Dim user_Renamed = New ApplicationUser With {.UserName = model.Email, .Email = model.Email}
+                Dim user_Renamed = New ApplicationUser With { _
+                    .UserName = model.Email, _
+                    .Email = model.Email _
+                }
                 Dim result = Await UserManager.CreateAsync(user_Renamed, model.Password)
                 If result.Succeeded Then
                     Await SignInManager.SignInAsync(user_Renamed, isPersistent:=False, rememberBrowser:=False)
@@ -169,7 +179,7 @@ Namespace AuthorizationService.Controllers
             If ModelState.IsValid Then
 
                 Dim user_Renamed = Await UserManager.FindByNameAsync(model.Email)
-                If user_Renamed Is Nothing OrElse Not(Await UserManager.IsEmailConfirmedAsync(user_Renamed.Id)) Then
+                If user_Renamed Is Nothing OrElse Not (Await UserManager.IsEmailConfirmedAsync(user_Renamed.Id)) Then
                     ' Don't reveal that the user does not exist or is not confirmed
                     Return View("ForgotPasswordConfirmation")
                 End If
@@ -245,8 +255,15 @@ Namespace AuthorizationService.Controllers
                 Return View("Error")
             End If
             Dim userFactors = Await UserManager.GetValidTwoFactorProvidersAsync(userId)
-            Dim factorOptions = userFactors.Select(Function(purpose) New SelectListItem With {.Text = purpose, .Value = purpose}).ToList()
-            Return View(New SendCodeViewModel With {.Providers = factorOptions, .ReturnUrl = returnUrl, .RememberMe = rememberMe})
+            Dim factorOptions = userFactors.Select(Function(purpose) New SelectListItem With { _
+                .Text = purpose, _
+                .Value = purpose _
+            }).ToList()
+            Return View(New SendCodeViewModel With { _
+                .Providers = factorOptions, _
+                .ReturnUrl = returnUrl, _
+                .RememberMe = rememberMe _
+            })
         End Function
 
         '
@@ -258,10 +275,14 @@ Namespace AuthorizationService.Controllers
             End If
 
             ' Generate the token and send it
-            If Not(Await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider)) Then
+            If Not (Await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider)) Then
                 Return View("Error")
             End If
-            Return RedirectToAction("VerifyCode", New With {Key .Provider = model.SelectedProvider, Key .ReturnUrl = model.ReturnUrl, Key .RememberMe = model.RememberMe})
+            Return RedirectToAction("VerifyCode", New With { _
+                Key .Provider = model.SelectedProvider, _
+                Key .ReturnUrl = model.ReturnUrl, _
+                Key .RememberMe = model.RememberMe _
+            })
         End Function
 
         '
@@ -281,7 +302,10 @@ Namespace AuthorizationService.Controllers
                 Case SignInStatus.LockedOut
                     Return View("Lockout")
                 Case SignInStatus.RequiresVerification
-                    Return RedirectToAction("SendCode", New With {Key .ReturnUrl = returnUrl, Key .RememberMe = False})
+                    Return RedirectToAction("SendCode", New With { _
+                        Key .ReturnUrl = returnUrl, _
+                        Key .RememberMe = False _
+                    })
                 Case Else
                     ' If the user does not have an account, then prompt the user to create an account
                     ViewData("ReturnUrl") = returnUrl
@@ -305,7 +329,10 @@ Namespace AuthorizationService.Controllers
                     Return View("ExternalLoginFailure")
                 End If
 
-                Dim user_Renamed = New ApplicationUser With {.UserName = model.Email, .Email = model.Email}
+                Dim user_Renamed = New ApplicationUser With { _
+                    .UserName = model.Email, _
+                    .Email = model.Email _
+                }
                 Dim result = Await UserManager.CreateAsync(user_Renamed)
                 If result.Succeeded Then
                     result = Await UserManager.AddLoginAsync(user_Renamed.Id, info.Login)

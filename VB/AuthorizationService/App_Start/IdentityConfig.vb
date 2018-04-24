@@ -38,10 +38,19 @@ Namespace AuthorizationService
         Public Shared Function Create(ByVal options As IdentityFactoryOptions(Of ApplicationUserManager), ByVal context As IOwinContext) As ApplicationUserManager
             Dim manager = New ApplicationUserManager(New UserStore(Of ApplicationUser)(context.Get(Of ApplicationDbContext)()))
             ' Configure validation logic for usernames
-            manager.UserValidator = New UserValidator(Of ApplicationUser)(manager) With {.AllowOnlyAlphanumericUserNames = False, .RequireUniqueEmail = True}
+            manager.UserValidator = New UserValidator(Of ApplicationUser)(manager) With { _
+                .AllowOnlyAlphanumericUserNames = False, _
+                .RequireUniqueEmail = True _
+            }
 
             ' Configure validation logic for passwords
-            manager.PasswordValidator = New PasswordValidator With {.RequiredLength = 6, .RequireNonLetterOrDigit = True, .RequireDigit = True, .RequireLowercase = True, .RequireUppercase = True}
+            manager.PasswordValidator = New PasswordValidator With { _
+                .RequiredLength = 6, _
+                .RequireNonLetterOrDigit = True, _
+                .RequireDigit = True, _
+                .RequireLowercase = True, _
+                .RequireUppercase = True _
+            }
 
             ' Configure user lockout defaults
             manager.UserLockoutEnabledByDefault = True
@@ -51,7 +60,10 @@ Namespace AuthorizationService
             ' Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             ' You can write your own provider and plug it in here.
             manager.RegisterTwoFactorProvider("Phone Code", New PhoneNumberTokenProvider(Of ApplicationUser) With {.MessageFormat = "Your security code is {0}"})
-            manager.RegisterTwoFactorProvider("Email Code", New EmailTokenProvider(Of ApplicationUser) With {.Subject = "Security Code", .BodyFormat = "Your security code is {0}"})
+            manager.RegisterTwoFactorProvider("Email Code", New EmailTokenProvider(Of ApplicationUser) With { _
+                .Subject = "Security Code", _
+                .BodyFormat = "Your security code is {0}" _
+            })
             manager.EmailService = New EmailService()
             manager.SmsService = New SmsService()
             Dim dataProtectionProvider = options.DataProtectionProvider

@@ -1,5 +1,4 @@
-﻿Imports DevExpress.XtraReports.UI
-Imports DevExpress.XtraReports.Web.WebDocumentViewer
+﻿Imports DevExpress.XtraReports.Web.WebDocumentViewer
 Imports System.Collections.Concurrent
 Imports System.Web
 
@@ -54,7 +53,7 @@ Namespace AuthorizationService.Services
 
         Private Function CheckUserAuthorized() As Boolean
             Dim user = HttpContext.Current.User
-            If user Is Nothing OrElse user.Identity Is Nothing OrElse (Not user.Identity.IsAuthenticated) Then
+            If user Is Nothing OrElse user.Identity Is Nothing OrElse Not user.Identity.IsAuthenticated Then
                 Return False
             End If
             Return True

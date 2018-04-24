@@ -45,10 +45,16 @@ Namespace AuthorizationService.Controllers
         '
         ' GET: /Manage/Index
         Public Async Function Index(ByVal message? As ManageMessageId) As Task(Of ActionResult)
-            ViewData("StatusMessage") = If(message = ManageMessageId.ChangePasswordSuccess, "Your password has been changed.", If(message = ManageMessageId.SetPasswordSuccess, "Your password has been set.", If(message = ManageMessageId.SetTwoFactorSuccess, "Your two-factor authentication provider has been set.", If(message = ManageMessageId.Error, "An error has occurred.", If(message = ManageMessageId.AddPhoneSuccess, "Your phone number was added.", If(message = ManageMessageId.RemovePhoneSuccess, "Your phone number was removed.", ""))))))
+            ViewData("StatusMessage") = If(message.Equals(ManageMessageId.ChangePasswordSuccess), "Your password has been changed.", If(message.Equals(ManageMessageId.SetPasswordSuccess), "Your password has been set.", If(message.Equals(ManageMessageId.SetTwoFactorSuccess), "Your two-factor authentication provider has been set.", If(message.Equals(ManageMessageId.Error), "An error has occurred.", If(message.Equals(ManageMessageId.AddPhoneSuccess), "Your phone number was added.", If(message.Equals(ManageMessageId.RemovePhoneSuccess), "Your phone number was removed.", ""))))))
 
             Dim userId = User.Identity.GetUserId()
-            Dim model = New IndexViewModel With {.HasPassword = HasPassword(), .PhoneNumber = Await UserManager.GetPhoneNumberAsync(userId), .TwoFactor = Await UserManager.GetTwoFactorEnabledAsync(userId), .Logins = Await UserManager.GetLoginsAsync(userId), .BrowserRemembered = Await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)}
+            Dim model = New IndexViewModel With { _
+                .HasPassword = HasPassword(), _
+                .PhoneNumber = Await UserManager.GetPhoneNumberAsync(userId), _
+                .TwoFactor = Await UserManager.GetTwoFactorEnabledAsync(userId), _
+                .Logins = Await UserManager.GetLoginsAsync(userId), _
+                .BrowserRemembered = Await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId) _
+            }
             Return View(model)
         End Function
 
@@ -87,7 +93,10 @@ Namespace AuthorizationService.Controllers
             ' Generate the token and send it
             Dim code = Await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number)
             If UserManager.SmsService IsNot Nothing Then
-                Dim message = New IdentityMessage With {.Destination = model.Number, .Body = "Your security code is: " & code}
+                Dim message = New IdentityMessage With { _
+                    .Destination = model.Number, _
+                    .Body = "Your security code is: " & code _
+                }
                 Await UserManager.SmsService.SendAsync(message)
             End If
             Return RedirectToAction("VerifyPhoneNumber", New With {Key .PhoneNumber = model.Number})
@@ -219,7 +228,7 @@ Namespace AuthorizationService.Controllers
         '
         ' GET: /Manage/ManageLogins
         Public Async Function ManageLogins(ByVal message? As ManageMessageId) As Task(Of ActionResult)
-            ViewData("StatusMessage") = If(message = ManageMessageId.RemoveLoginSuccess, "The external login was removed.", If(message = ManageMessageId.Error, "An error has occurred.", ""))
+            ViewData("StatusMessage") = If(message.Equals(ManageMessageId.RemoveLoginSuccess), "The external login was removed.", If(message.Equals(ManageMessageId.Error), "An error has occurred.", ""))
 
             Dim user_Renamed = Await UserManager.FindByIdAsync(User.Identity.GetUserId())
             If user_Renamed Is Nothing Then
@@ -228,7 +237,10 @@ Namespace AuthorizationService.Controllers
             Dim userLogins = Await UserManager.GetLoginsAsync(User.Identity.GetUserId())
             Dim otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(Function(auth) userLogins.All(Function(ul) auth.AuthenticationType <> ul.LoginProvider)).ToList()
             ViewData("ShowRemoveButton") = user_Renamed.PasswordHash IsNot Nothing OrElse userLogins.Count > 1
-            Return View(New ManageLoginsViewModel With {.CurrentLogins = userLogins, .OtherLogins = otherLogins})
+            Return View(New ManageLoginsViewModel With { _
+                .CurrentLogins = userLogins, _
+                .OtherLogins = otherLogins _
+            })
         End Function
 
         '

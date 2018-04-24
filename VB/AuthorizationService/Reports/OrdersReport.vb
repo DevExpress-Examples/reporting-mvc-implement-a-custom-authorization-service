@@ -2,7 +2,6 @@
 Imports System.Drawing
 Imports System.Collections
 Imports System.ComponentModel
-Imports DevExpress.XtraReports.UI
 
 ''' <summary>
 ''' Summary description for OrdersReport
