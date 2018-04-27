@@ -9,7 +9,8 @@ Namespace AuthorizationService
         Inherits System.Web.HttpApplication
 
         Protected Sub Application_Start()
-            DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.ReadOnly
+            DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Required
+            DefaultWebDocumentViewerContainer.Register(Of IExportingAuthorizationService, Services.OperationLogger)()
             DefaultWebDocumentViewerContainer.Register(Of WebDocumentViewerOperationLogger, Services.OperationLogger)()
             DefaultWebDocumentViewerContainer.Register(Of IWebDocumentViewerAuthorizationService, Services.OperationLogger)()
             AreaRegistration.RegisterAllAreas()

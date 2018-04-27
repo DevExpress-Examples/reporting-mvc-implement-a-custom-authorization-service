@@ -2,9 +2,13 @@
 using DevExpress.XtraReports.Web.WebDocumentViewer;
 using System.Collections.Concurrent;
 using System.Web;
+using System;
+using DevExpress.XtraPrinting;
+using DevExpress.XtraReports.Web.ClientControls;
 
 namespace AuthorizationService.Services {
-    public class OperationLogger: WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService {
+    public class OperationLogger: WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
+    {
         #region WebDocumentViewerOperationLogger
         public override void ReportOpening(string reportId, string documentId, XtraReport report) {
             if (HttpContext.Current.Session == null) {
@@ -17,6 +21,11 @@ namespace AuthorizationService.Services {
         public override void BuildStarted(string reportId, string documentId, ReportBuildProperties buildProperties) {
             SaveUsedEntityId(Constants.ReportDictionaryName, reportId);
             SaveUsedEntityId(Constants.DocumentDictionaryName, documentId);
+        }
+
+        public override ExportedDocument ExportDocumentStarting(string documentId, string asyncExportOperationId, string format, ExportOptions options, PrintingSystemBase printingSystem, Func<ExportedDocument> doExportSynchronously) {
+            SaveUsedEntityId(Constants.ExportedDocumentDictionaryName, asyncExportOperationId);
+            return base.ExportDocumentStarting(documentId, asyncExportOperationId, format, options, printingSystem, doExportSynchronously);
         }
 
         public override void ReleaseDocument(string documentId) {
@@ -49,14 +58,19 @@ namespace AuthorizationService.Services {
             return CheckEntityAvailability(Constants.ReportDictionaryName, reportId);
         }
 
+        public bool CanReadExportedDocument(string exportDocumentId) {
+            return CheckEntityAvailability(Constants.ExportedDocumentDictionaryName, exportDocumentId);
+        }
+        #endregion IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
+
         bool CheckUserAuthorized() {
             var user = HttpContext.Current.User;
-            if (user == null || user.Identity == null || !user.Identity.IsAuthenticated) {
+            if (user == null || user.Identity == null || !user.Identity.IsAuthenticated)
+            {
                 return false;
             }
             return true;
         }
-        #endregion IWebDocumentViewerAuthorizationService
 
         void SaveUsedEntityId(string dictionaryName, string id) {
             if (string.IsNullOrEmpty(id))
@@ -73,7 +87,7 @@ namespace AuthorizationService.Services {
         }
 
         bool CheckEntityAvailability(string dictionaryName, string id) {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(id) || !CheckUserAuthorized())
                 return false;
 
             lock (HttpContext.Current.Session.SyncRoot) {

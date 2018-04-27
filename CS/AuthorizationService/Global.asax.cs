@@ -7,7 +7,8 @@ using System.Web.Routing;
 namespace AuthorizationService {
     public class MvcApplication : System.Web.HttpApplication {
         protected void Application_Start() {
-            DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.ReadOnly;
+            DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Required;
+            DefaultWebDocumentViewerContainer.Register<IExportingAuthorizationService, Services.OperationLogger>();
             DefaultWebDocumentViewerContainer.Register<WebDocumentViewerOperationLogger, Services.OperationLogger>();
             DefaultWebDocumentViewerContainer.Register<IWebDocumentViewerAuthorizationService, Services.OperationLogger>();
             AreaRegistration.RegisterAllAreas();
