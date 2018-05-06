@@ -4,14 +4,13 @@ Imports System.Web
 Imports System
 Imports DevExpress.XtraPrinting
 Imports DevExpress.XtraReports.Web.ClientControls
-Imports DevExpress.XtraReports.UI
 
 Namespace AuthorizationService.Services
     Public Class OperationLogger
         Inherits WebDocumentViewerOperationLogger
         Implements IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
 
-#Region "WebDocumentViewerOperationLogger"
+        #Region "WebDocumentViewerOperationLogger"
         Public Overrides Sub ReportOpening(ByVal reportId As String, ByVal documentId As String, ByVal report As XtraReport)
             If HttpContext.Current.Session Is Nothing Then
                 Return
@@ -33,9 +32,9 @@ Namespace AuthorizationService.Services
         Public Overrides Sub ReleaseDocument(ByVal documentId As String)
 
         End Sub
-#End Region ' WebDocumentViewerOperationLogger
+        #End Region ' WebDocumentViewerOperationLogger
 
-#Region "IWebDocumentViewerAuthorizationService"
+        #Region "IWebDocumentViewerAuthorizationService"
         Private Function IWebDocumentViewerAuthorizationService_CanCreateDocument() As Boolean Implements IWebDocumentViewerAuthorizationService.CanCreateDocument
             Return CheckUserAuthorized()
         End Function
@@ -60,10 +59,10 @@ Namespace AuthorizationService.Services
             Return CheckEntityAvailability(Constants.ReportDictionaryName, reportId)
         End Function
 
-        Private Function IWebDocumentViewerAuthorizationService_CanReadExportedDocument(ByVal exportDocumentId As String) As Boolean Implements IExportingAuthorizationService.CanReadExportedDocument
+        Public Function CanReadExportedDocument(ByVal exportDocumentId As String) As Boolean
             Return CheckEntityAvailability(Constants.ExportedDocumentDictionaryName, exportDocumentId)
         End Function
-#End Region ' IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
+        #End Region ' IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
 
         Private Function CheckUserAuthorized() As Boolean
             Dim user = HttpContext.Current.User
@@ -81,8 +80,8 @@ Namespace AuthorizationService.Services
             Dim dictionary As ConcurrentDictionary(Of String, Boolean) = Nothing
             SyncLock HttpContext.Current.Session.SyncRoot
                 If HttpContext.Current.Session(dictionaryName) Is Nothing Then
-                    dictionary = New ConcurrentDictionary(Of String, Boolean)()
-                    HttpContext.Current.Session(dictionaryName) = dictionary
+                     dictionary = New ConcurrentDictionary(Of String, Boolean)()
+                     HttpContext.Current.Session(dictionaryName) = dictionary
                 End If
             End SyncLock
             If dictionary Is Nothing Then
