@@ -1,3 +1,12 @@
+<!-- default file list -->
+*Files to look at*:
+
+* [HomeController.cs](./CS/AuthorizationService/Controllers/HomeController.cs) (VB: [HomeController.vb](./VB/AuthorizationService/Controllers/HomeController.vb))
+* [Global.asax.cs](./CS/AuthorizationService/Global.asax.cs) (VB: [Global.asax.vb](./VB/AuthorizationService/Global.asax.vb))
+* [Constants.cs](./CS/AuthorizationService/Services/Constants.cs) (VB: [Constants.vb](./VB/AuthorizationService/Services/Constants.vb))
+* **[OperationLogger.cs](./CS/AuthorizationService/Services/OperationLogger.cs) (VB: [OperationLogger.vb](./VB/AuthorizationService/Services/OperationLogger.vb))**
+* [Index.cshtml](./CS/AuthorizationService/Views/Home/Index.cshtml)
+<!-- default file list end -->
 # How to implement a custom authorization service
 
 
