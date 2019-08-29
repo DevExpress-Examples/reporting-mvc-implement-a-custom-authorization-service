@@ -2,6 +2,7 @@
 Imports System.Collections.Concurrent
 Imports System.Web
 Imports System
+Imports DevExpress.XtraReports.UI
 Imports DevExpress.XtraPrinting
 Imports DevExpress.XtraReports.Web.ClientControls
 
@@ -59,10 +60,10 @@ Namespace AuthorizationService.Services
             Return CheckEntityAvailability(Constants.ReportDictionaryName, reportId)
         End Function
 
-        Public Function CanReadExportedDocument(ByVal exportDocumentId As String) As Boolean
+        Public Function CanReadExportedDocument(ByVal exportDocumentId As String) As Boolean Implements IExportingAuthorizationService.CanReadExportedDocument
             Return CheckEntityAvailability(Constants.ExportedDocumentDictionaryName, exportDocumentId)
         End Function
-        #End Region ' IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
+#End Region ' IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
 
         Private Function CheckUserAuthorized() As Boolean
             Dim user = HttpContext.Current.User
