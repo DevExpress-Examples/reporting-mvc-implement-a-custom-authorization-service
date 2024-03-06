@@ -1,4 +1,4 @@
-﻿Imports System.Web
+Imports System.Web
 Imports System.Web.Optimization
 
 Namespace AuthorizationService

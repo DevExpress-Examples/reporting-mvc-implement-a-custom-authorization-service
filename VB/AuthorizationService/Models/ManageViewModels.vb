@@ -1,4 +1,4 @@
-﻿Imports System.Collections.Generic
+Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports Microsoft.AspNet.Identity
 Imports Microsoft.Owin.Security

@@ -1,7 +1,8 @@
-﻿Imports System
+Imports System
 Imports System.Drawing
 Imports System.Collections
 Imports System.ComponentModel
+Imports DevExpress.Drawing
 Imports DevExpress.XtraReports.UI
 
 ''' <summary>
@@ -397,7 +398,7 @@ Public Class OrdersReport
         Me.Title.BorderColor = System.Drawing.Color.Black
         Me.Title.Borders = DevExpress.XtraPrinting.BorderSide.None
         Me.Title.BorderWidth = 1.0!
-        Me.Title.Font = New System.Drawing.Font("Times New Roman", 20.0!, System.Drawing.FontStyle.Bold)
+        Me.Title.Font = New DXFont("Times New Roman", 20.0!, DXFontStyle.Bold)
         Me.Title.ForeColor = System.Drawing.Color.Maroon
         Me.Title.Name = "Title"
         '
@@ -407,7 +408,7 @@ Public Class OrdersReport
         Me.FieldCaption.BorderColor = System.Drawing.Color.Black
         Me.FieldCaption.Borders = DevExpress.XtraPrinting.BorderSide.None
         Me.FieldCaption.BorderWidth = 1.0!
-        Me.FieldCaption.Font = New System.Drawing.Font("Arial", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.FieldCaption.Font = New DXFont("Arial", 10.0!, DXFontStyle.Bold)
         Me.FieldCaption.ForeColor = System.Drawing.Color.Maroon
         Me.FieldCaption.Name = "FieldCaption"
         '
@@ -417,7 +418,7 @@ Public Class OrdersReport
         Me.PageInfo.BorderColor = System.Drawing.Color.Black
         Me.PageInfo.Borders = DevExpress.XtraPrinting.BorderSide.None
         Me.PageInfo.BorderWidth = 1.0!
-        Me.PageInfo.Font = New System.Drawing.Font("Times New Roman", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.PageInfo.Font = New DXFont("Times New Roman", 10.0!, DXFontStyle.Bold)
         Me.PageInfo.ForeColor = System.Drawing.Color.Black
         Me.PageInfo.Name = "PageInfo"
         '
@@ -427,7 +428,7 @@ Public Class OrdersReport
         Me.DataField.BorderColor = System.Drawing.Color.Black
         Me.DataField.Borders = DevExpress.XtraPrinting.BorderSide.None
         Me.DataField.BorderWidth = 1.0!
-        Me.DataField.Font = New System.Drawing.Font("Times New Roman", 10.0!)
+        Me.DataField.Font = New DXFont("Times New Roman", 10.0!)
         Me.DataField.ForeColor = System.Drawing.Color.Black
         Me.DataField.Name = "DataField"
         Me.DataField.Padding = New DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100.0!)

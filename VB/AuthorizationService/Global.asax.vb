@@ -1,4 +1,4 @@
-﻿Imports DevExpress.XtraReports.Web.WebDocumentViewer
+Imports DevExpress.XtraReports.Web.WebDocumentViewer
 Imports System
 Imports System.Web.Mvc
 Imports System.Web.Optimization
@@ -10,9 +10,9 @@ Namespace AuthorizationService
 
         Protected Sub Application_Start()
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Required
-            DefaultWebDocumentViewerContainer.Register(Of IExportingAuthorizationService, Services.OperationLogger)()
             DefaultWebDocumentViewerContainer.Register(Of WebDocumentViewerOperationLogger, Services.OperationLogger)()
             DefaultWebDocumentViewerContainer.Register(Of IWebDocumentViewerAuthorizationService, Services.OperationLogger)()
+			DefaultWebDocumentViewerContainer.Register(Of IExportingAuthorizationService, Services.OperationLogger)()
             AreaRegistration.RegisterAllAreas()
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters)
             RouteConfig.RegisterRoutes(RouteTable.Routes)

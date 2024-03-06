@@ -1,4 +1,4 @@
-﻿Imports Microsoft.AspNet.Identity
+Imports Microsoft.AspNet.Identity
 Imports Microsoft.AspNet.Identity.EntityFramework
 Imports System.Security.Claims
 Imports System.Threading.Tasks

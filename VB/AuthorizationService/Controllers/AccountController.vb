@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Globalization
 Imports System.Linq
 Imports System.Security.Claims

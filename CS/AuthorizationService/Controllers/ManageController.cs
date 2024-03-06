@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -331,7 +331,6 @@ namespace AuthorizationService.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -382,6 +381,5 @@ namespace AuthorizationService.Controllers
             Error
         }
 
-#endregion
     }
 }

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
+using DevExpress.Drawing;
 using DevExpress.XtraReports.UI;
 
 /// <summary>
@@ -63,7 +64,6 @@ public class OrdersReport : DevExpress.XtraReports.UI.XtraReport {
         base.Dispose(disposing);
     }
 
-    #region Designer generated code
 
     /// <summary>
     /// Required method for Designer support - do not modify
@@ -414,7 +414,7 @@ public class OrdersReport : DevExpress.XtraReports.UI.XtraReport {
             this.Title.BorderColor = System.Drawing.Color.Black;
             this.Title.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.Title.BorderWidth = 1F;
-            this.Title.Font = new System.Drawing.Font("Times New Roman", 20F, System.Drawing.FontStyle.Bold);
+            this.Title.Font = new DXFont("Times New Roman", 20F, DXFontStyle.Bold);
             this.Title.ForeColor = System.Drawing.Color.Maroon;
             this.Title.Name = "Title";
             // 
@@ -424,7 +424,7 @@ public class OrdersReport : DevExpress.XtraReports.UI.XtraReport {
             this.FieldCaption.BorderColor = System.Drawing.Color.Black;
             this.FieldCaption.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.FieldCaption.BorderWidth = 1F;
-            this.FieldCaption.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.FieldCaption.Font = new DXFont("Arial", 10F, DXFontStyle.Bold);
             this.FieldCaption.ForeColor = System.Drawing.Color.Maroon;
             this.FieldCaption.Name = "FieldCaption";
             // 
@@ -434,7 +434,7 @@ public class OrdersReport : DevExpress.XtraReports.UI.XtraReport {
             this.PageInfo.BorderColor = System.Drawing.Color.Black;
             this.PageInfo.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.PageInfo.BorderWidth = 1F;
-            this.PageInfo.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold);
+            this.PageInfo.Font = new DXFont("Times New Roman", 10F, DXFontStyle.Bold);
             this.PageInfo.ForeColor = System.Drawing.Color.Black;
             this.PageInfo.Name = "PageInfo";
             // 
@@ -444,7 +444,7 @@ public class OrdersReport : DevExpress.XtraReports.UI.XtraReport {
             this.DataField.BorderColor = System.Drawing.Color.Black;
             this.DataField.Borders = DevExpress.XtraPrinting.BorderSide.None;
             this.DataField.BorderWidth = 1F;
-            this.DataField.Font = new System.Drawing.Font("Times New Roman", 10F);
+            this.DataField.Font = new DXFont("Times New Roman", 10F);
             this.DataField.ForeColor = System.Drawing.Color.Black;
             this.DataField.Name = "DataField";
             this.DataField.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -558,5 +558,4 @@ public class OrdersReport : DevExpress.XtraReports.UI.XtraReport {
 
     }
 
-    #endregion
 }

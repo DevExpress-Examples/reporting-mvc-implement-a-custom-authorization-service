@@ -1,4 +1,4 @@
-﻿Imports AuthorizationService.Models
+Imports AuthorizationService.Models
 Imports Microsoft.AspNet.Identity
 Imports Microsoft.AspNet.Identity.Owin
 Imports Microsoft.Owin

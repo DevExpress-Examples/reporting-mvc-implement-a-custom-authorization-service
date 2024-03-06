@@ -1,7 +1,8 @@
-﻿Imports System
+Imports System
 Imports System.Drawing
 Imports System.Collections
 Imports System.ComponentModel
+Imports DevExpress.Drawing
 Imports DevExpress.XtraReports.UI
 
 ''' <summary>
@@ -386,7 +387,7 @@ Public Class CategoriesReport
         Me.Title.BorderColor = System.Drawing.Color.Black
         Me.Title.Borders = DevExpress.XtraPrinting.BorderSide.None
         Me.Title.BorderWidth = 1.0!
-        Me.Title.Font = New System.Drawing.Font("Times New Roman", 20.0!, System.Drawing.FontStyle.Bold)
+        Me.Title.Font = New DXFont("Times New Roman", 20.0!, DXFontStyle.Bold)
         Me.Title.ForeColor = System.Drawing.Color.Maroon
         Me.Title.Name = "Title"
         '
@@ -396,7 +397,7 @@ Public Class CategoriesReport
         Me.FieldCaption.BorderColor = System.Drawing.Color.Black
         Me.FieldCaption.Borders = DevExpress.XtraPrinting.BorderSide.None
         Me.FieldCaption.BorderWidth = 1.0!
-        Me.FieldCaption.Font = New System.Drawing.Font("Arial", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.FieldCaption.Font = New DXFont("Arial", 10.0!, DXFontStyle.Bold)
         Me.FieldCaption.ForeColor = System.Drawing.Color.Maroon
         Me.FieldCaption.Name = "FieldCaption"
         '
@@ -406,7 +407,7 @@ Public Class CategoriesReport
         Me.PageInfo.BorderColor = System.Drawing.Color.Black
         Me.PageInfo.Borders = DevExpress.XtraPrinting.BorderSide.None
         Me.PageInfo.BorderWidth = 1.0!
-        Me.PageInfo.Font = New System.Drawing.Font("Times New Roman", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.PageInfo.Font = New DXFont("Times New Roman", 10.0!, DXFontStyle.Bold)
         Me.PageInfo.ForeColor = System.Drawing.Color.Black
         Me.PageInfo.Name = "PageInfo"
         '
@@ -416,7 +417,7 @@ Public Class CategoriesReport
         Me.DataField.BorderColor = System.Drawing.Color.Black
         Me.DataField.Borders = DevExpress.XtraPrinting.BorderSide.None
         Me.DataField.BorderWidth = 1.0!
-        Me.DataField.Font = New System.Drawing.Font("Times New Roman", 10.0!)
+        Me.DataField.Font = New DXFont("Times New Roman", 10.0!)
         Me.DataField.ForeColor = System.Drawing.Color.Black
         Me.DataField.Name = "DataField"
         Me.DataField.Padding = New DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100.0!)
@@ -469,7 +470,7 @@ Public Class CategoriesReport
         '
         'xrLabel15
         '
-        Me.xrLabel15.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.xrLabel15.Font = New DXFont("Times New Roman", 12.0!, DXFontStyle.Bold, DXGraphicsUnit.Point, New DXFontAdditionalProperty(){ New DXFontAdditionalProperty(DXFontAdditionalProperty.GdiCharSet, CType(0, Byte)) })
         Me.xrLabel15.LocationFloat = New DevExpress.Utils.PointFloat(550.0!, 0!)
         Me.xrLabel15.Multiline = True
         Me.xrLabel15.Name = "xrLabel15"
@@ -480,7 +481,7 @@ Public Class CategoriesReport
         '
         'xrLabel14
         '
-        Me.xrLabel14.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.xrLabel14.Font = New DXFont("Times New Roman", 12.0!, DXFontStyle.Bold, DXGraphicsUnit.Point, New DXFontAdditionalProperty(){ New DXFontAdditionalProperty(DXFontAdditionalProperty.GdiCharSet, CType(0, Byte)) })
         Me.xrLabel14.LocationFloat = New DevExpress.Utils.PointFloat(320.8333!, 0!)
         Me.xrLabel14.Multiline = True
         Me.xrLabel14.Name = "xrLabel14"
@@ -491,7 +492,7 @@ Public Class CategoriesReport
         '
         'xrLabel13
         '
-        Me.xrLabel13.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.xrLabel13.Font = New DXFont("Times New Roman", 12.0!, DXFontStyle.Bold, DXGraphicsUnit.Point, New DXFontAdditionalProperty(){ New DXFontAdditionalProperty(DXFontAdditionalProperty.GdiCharSet, CType(0, Byte)) })
         Me.xrLabel13.LocationFloat = New DevExpress.Utils.PointFloat(0!, 0!)
         Me.xrLabel13.Name = "xrLabel13"
         Me.xrLabel13.Padding = New DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100.0!)

@@ -1,4 +1,4 @@
-﻿using DevExpress.XtraReports.UI;
+using DevExpress.XtraReports.UI;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
 using System.Collections.Concurrent;
 using System.Web;
@@ -7,10 +7,12 @@ using DevExpress.XtraPrinting;
 using DevExpress.XtraReports.Web.ClientControls;
 
 namespace AuthorizationService.Services {
-    public class OperationLogger: WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
+    public class OperationLogger: WebDocumentViewerOperationLogger, 
+        IWebDocumentViewerAuthorizationService, 
+        IExportingAuthorizationService
     {
-        #region WebDocumentViewerOperationLogger
-        public override void ReportOpening(string reportId, string documentId, XtraReport report) {
+        public override void ReportOpening(string reportId, string documentId, XtraReport report) 
+        {
             if (HttpContext.Current.Session == null) {
                 return;
             }
@@ -18,22 +20,26 @@ namespace AuthorizationService.Services {
             SaveUsedEntityId(Constants.DocumentDictionaryName, documentId);
         }
 
-        public override void BuildStarted(string reportId, string documentId, ReportBuildProperties buildProperties) {
+        public override void BuildStarted(string reportId, string documentId, 
+            ReportBuildProperties buildProperties) 
+        {
             SaveUsedEntityId(Constants.ReportDictionaryName, reportId);
             SaveUsedEntityId(Constants.DocumentDictionaryName, documentId);
         }
 
-        public override ExportedDocument ExportDocumentStarting(string documentId, string asyncExportOperationId, string format, ExportOptions options, PrintingSystemBase printingSystem, Func<ExportedDocument> doExportSynchronously) {
+        public override ExportedDocument ExportDocumentStarting(string documentId, 
+            string asyncExportOperationId, string format, ExportOptions options, 
+            PrintingSystemBase printingSystem, Func<ExportedDocument> doExportSynchronously) 
+        {
             SaveUsedEntityId(Constants.ExportedDocumentDictionaryName, asyncExportOperationId);
-            return base.ExportDocumentStarting(documentId, asyncExportOperationId, format, options, printingSystem, doExportSynchronously);
+            return base.ExportDocumentStarting(documentId, asyncExportOperationId, format, options, 
+                printingSystem, doExportSynchronously);
         }
 
         public override void ReleaseDocument(string documentId) {
             
         }
-        #endregion WebDocumentViewerOperationLogger
 
-        #region IWebDocumentViewerAuthorizationService
         bool IWebDocumentViewerAuthorizationService.CanCreateDocument() {
             return CheckUserAuthorized();
         }
@@ -61,7 +67,6 @@ namespace AuthorizationService.Services {
         public bool CanReadExportedDocument(string exportDocumentId) {
             return CheckEntityAvailability(Constants.ExportedDocumentDictionaryName, exportDocumentId);
         }
-        #endregion IWebDocumentViewerAuthorizationService, IExportingAuthorizationService
 
         bool CheckUserAuthorized() {
             var user = HttpContext.Current.User;
@@ -79,10 +84,12 @@ namespace AuthorizationService.Services {
             ConcurrentDictionary<string, bool> dictionary = null;
             lock (HttpContext.Current.Session.SyncRoot) {
                 if (HttpContext.Current.Session[dictionaryName] == null)
-                     HttpContext.Current.Session[dictionaryName] = dictionary = new ConcurrentDictionary<string, bool>();
+                     HttpContext.Current.Session[dictionaryName] = dictionary 
+                        = new ConcurrentDictionary<string, bool>();
             }
             if (dictionary == null)
-                dictionary = ((ConcurrentDictionary<string, bool>)HttpContext.Current.Session[dictionaryName]);
+                dictionary = ((ConcurrentDictionary<string, bool>)HttpContext.Current.
+                    Session[dictionaryName]);
             dictionary.AddOrUpdate(id, false, (_1, _2) => false);
         }
 
@@ -94,7 +101,9 @@ namespace AuthorizationService.Services {
                 if (HttpContext.Current.Session[dictionaryName] == null)
                     return false;
             }
-            return ((ConcurrentDictionary<string, bool>)HttpContext.Current.Session[dictionaryName]).ContainsKey(id);
+            return 
+			((ConcurrentDictionary<string, bool>)HttpContext.Current.
+                Session[dictionaryName]).ContainsKey(id);
         }
 
         void DisposeEntityRequested(string dictionaryName, string id) {
@@ -104,7 +113,8 @@ namespace AuthorizationService.Services {
                 if (HttpContext.Current.Session[dictionaryName] == null)
                     return;
             }
-            ((ConcurrentDictionary<string, bool>)HttpContext.Current.Session[dictionaryName]).AddOrUpdate(id, true, (_1, _2) => true);
+            ((ConcurrentDictionary<string, bool>)HttpContext.Current.
+                Session[dictionaryName]).AddOrUpdate(id, true, (_1, _2) => true);
         }
     }
 }

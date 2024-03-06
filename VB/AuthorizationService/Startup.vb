@@ -1,4 +1,4 @@
-﻿Imports Microsoft.Owin
+Imports Microsoft.Owin
 Imports Owin
 
 <Assembly: OwinStartupAttribute(GetType(AuthorizationService.Startup))>

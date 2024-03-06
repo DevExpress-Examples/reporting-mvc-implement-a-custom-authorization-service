@@ -1,4 +1,4 @@
-﻿using DevExpress.XtraReports.Web.WebDocumentViewer;
+using DevExpress.XtraReports.Web.WebDocumentViewer;
 using System;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -8,9 +8,9 @@ namespace AuthorizationService {
     public class MvcApplication : System.Web.HttpApplication {
         protected void Application_Start() {
             DevExpress.XtraReports.Web.WebDocumentViewer.Native.WebDocumentViewerBootstrapper.SessionState = System.Web.SessionState.SessionStateBehavior.Required;
-            DefaultWebDocumentViewerContainer.Register<IExportingAuthorizationService, Services.OperationLogger>();
             DefaultWebDocumentViewerContainer.Register<WebDocumentViewerOperationLogger, Services.OperationLogger>();
             DefaultWebDocumentViewerContainer.Register<IWebDocumentViewerAuthorizationService, Services.OperationLogger>();
+			DefaultWebDocumentViewerContainer.Register<IExportingAuthorizationService, Services.OperationLogger>();
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
