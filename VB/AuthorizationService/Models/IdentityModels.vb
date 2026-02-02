@@ -1,9 +1,10 @@
-﻿Imports Microsoft.AspNet.Identity
+Imports Microsoft.AspNet.Identity
 Imports Microsoft.AspNet.Identity.EntityFramework
 Imports System.Security.Claims
 Imports System.Threading.Tasks
 
 Namespace AuthorizationService.Models
+
     ' You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     Public Class ApplicationUser
         Inherits IdentityUser
@@ -20,7 +21,7 @@ Namespace AuthorizationService.Models
         Inherits IdentityDbContext(Of ApplicationUser)
 
         Public Sub New()
-            MyBase.New("DefaultConnection", throwIfV1Schema:= False)
+            MyBase.New("DefaultConnection", throwIfV1Schema:=False)
         End Sub
 
         Public Shared Function Create() As ApplicationDbContext

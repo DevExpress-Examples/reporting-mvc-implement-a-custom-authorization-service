@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.vb" Inherits="AuthorizationService.MvcApplication" Language="vb" %>
+<%@ Application Codebehind="Global.asax.vb" Inherits="AuthorizationService.MvcApplication" Language="VB" %>

@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Globalization
 Imports System.Linq
 Imports System.Security.Claims
@@ -11,395 +11,423 @@ Imports Microsoft.Owin.Security
 Imports AuthorizationService.Models
 
 Namespace AuthorizationService.Controllers
-    <Authorize> _
-    Public Class AccountController
-        Inherits Controller
 
-        Private _signInManager As ApplicationSignInManager
-        Private _userManager As ApplicationUserManager
+    <System.Web.Mvc.AuthorizeAttribute>
+    Public Class AccountController
+        Inherits System.Web.Mvc.Controller
+
+        Private _signInManager As AuthorizationService.ApplicationSignInManager
+
+        Private _userManager As AuthorizationService.ApplicationUserManager
 
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal userManager As ApplicationUserManager, ByVal signInManager As ApplicationSignInManager)
+        Public Sub New(ByVal userManager As AuthorizationService.ApplicationUserManager, ByVal signInManager As AuthorizationService.ApplicationSignInManager)
             Me.UserManager = userManager
             Me.SignInManager = signInManager
         End Sub
 
-        Public Property SignInManager() As ApplicationSignInManager
+        Public Property SignInManager As ApplicationSignInManager
             Get
-                Return If(_signInManager Is Nothing, HttpContext.GetOwinContext().Get(Of ApplicationSignInManager)(), _signInManager)
+                Return If(Me._signInManager Is Nothing, Me.HttpContext.GetOwinContext().[Get](Of AuthorizationService.ApplicationSignInManager)(), Me._signInManager)
             End Get
+
             Private Set(ByVal value As ApplicationSignInManager)
-                _signInManager = value
+                Me._signInManager = value
             End Set
         End Property
 
-        Public Property UserManager() As ApplicationUserManager
+        Public Property UserManager As ApplicationUserManager
             Get
-                Return If(_userManager Is Nothing, HttpContext.GetOwinContext().GetUserManager(Of ApplicationUserManager)(), _userManager)
+                Return If(Me._userManager Is Nothing, Me.HttpContext.GetOwinContext().GetUserManager(Of AuthorizationService.ApplicationUserManager)(), Me._userManager)
             End Get
+
             Private Set(ByVal value As ApplicationUserManager)
-                _userManager = value
+                Me._userManager = value
             End Set
         End Property
 
         '
         ' GET: /Account/Login
-        <AllowAnonymous> _
+        <System.Web.Mvc.AllowAnonymousAttribute>
         Public Function Login(ByVal returnUrl As String) As ActionResult
-            ViewData("ReturnUrl") = returnUrl
-            Return View()
+            Me.ViewData("ReturnUrl") = returnUrl
+            Return Me.View()
         End Function
 
         '
         ' POST: /Account/Login
-        <HttpPost, AllowAnonymous, ValidateAntiForgeryToken> _
-        Public Async Function Login(ByVal model As LoginViewModel, ByVal returnUrl As String) As Task(Of ActionResult)
-            If Not ModelState.IsValid Then
-                Return View(model)
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
+        Public Async Function Login(ByVal model As AuthorizationService.Models.LoginViewModel, ByVal returnUrl As String) As Task(Of System.Web.Mvc.ActionResult)
+            If Not Me.ModelState.IsValid Then
+                Return Me.View(model)
             End If
 
             ' This doesn't count login failures towards account lockout
             ' To enable password failures to trigger account lockout, change to shouldLockout: true
-            Dim result = Await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout:= False)
+            Dim result = Await Me.SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout:=False)
             Select Case result
-                Case SignInStatus.Success
-                    Return RedirectToLocal(returnUrl)
-                Case SignInStatus.LockedOut
-                    Return View("Lockout")
-                Case SignInStatus.RequiresVerification
-                    Return RedirectToAction("SendCode", New With {Key .ReturnUrl = returnUrl, Key .RememberMe = model.RememberMe})
+                Case Microsoft.AspNet.Identity.Owin.SignInStatus.Success
+                    Return Me.RedirectToLocal(returnUrl)
+                Case Microsoft.AspNet.Identity.Owin.SignInStatus.LockedOut
+                    Return Me.View("Lockout")
+                Case Microsoft.AspNet.Identity.Owin.SignInStatus.RequiresVerification
+                    Return Me.RedirectToAction("SendCode", New With {.ReturnUrl = returnUrl, .RememberMe = model.RememberMe})
                 Case Else
-                    ModelState.AddModelError("", "Invalid login attempt.")
-                    Return View(model)
+                    Me.ModelState.AddModelError("", "Invalid login attempt.")
+                    Return Me.View(model)
             End Select
         End Function
 
         '
         ' GET: /Account/VerifyCode
-        <AllowAnonymous> _
-        Public Async Function VerifyCode(ByVal provider As String, ByVal returnUrl As String, ByVal rememberMe As Boolean) As Task(Of ActionResult)
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        Public Async Function VerifyCode(ByVal provider As String, ByVal returnUrl As String, ByVal rememberMe As Boolean) As Task(Of System.Web.Mvc.ActionResult)
             ' Require that the user has already logged in via username/password or external login
-            If Not(Await SignInManager.HasBeenVerifiedAsync()) Then
-                Return View("Error")
+            If Not(Await Me.SignInManager.HasBeenVerifiedAsync()) Then
+                Return Me.View("Error")
             End If
-            Return View(New VerifyCodeViewModel With {.Provider = provider, .ReturnUrl = returnUrl, .RememberMe = rememberMe})
+
+            Return Me.View(New AuthorizationService.Models.VerifyCodeViewModel With {.Provider = provider, .ReturnUrl = returnUrl, .RememberMe = rememberMe})
         End Function
 
         '
         ' POST: /Account/VerifyCode
-        <HttpPost, AllowAnonymous, ValidateAntiForgeryToken> _
-        Public Async Function VerifyCode(ByVal model As VerifyCodeViewModel) As Task(Of ActionResult)
-            If Not ModelState.IsValid Then
-                Return View(model)
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
+        Public Async Function VerifyCode(ByVal model As AuthorizationService.Models.VerifyCodeViewModel) As Task(Of System.Web.Mvc.ActionResult)
+            If Not Me.ModelState.IsValid Then
+                Return Me.View(model)
             End If
 
             ' The following code protects for brute force attacks against the two factor codes. 
             ' If a user enters incorrect codes for a specified amount of time then the user account 
             ' will be locked out for a specified amount of time. 
             ' You can configure the account lockout settings in IdentityConfig
-            Dim result = Await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:= model.RememberMe, rememberBrowser:= model.RememberBrowser)
+            Dim result = Await Me.SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:=model.RememberMe, rememberBrowser:=model.RememberBrowser)
             Select Case result
-                Case SignInStatus.Success
-                    Return RedirectToLocal(model.ReturnUrl)
-                Case SignInStatus.LockedOut
-                    Return View("Lockout")
+                Case Microsoft.AspNet.Identity.Owin.SignInStatus.Success
+                    Return Me.RedirectToLocal(model.ReturnUrl)
+                Case Microsoft.AspNet.Identity.Owin.SignInStatus.LockedOut
+                    Return Me.View("Lockout")
                 Case Else
-                    ModelState.AddModelError("", "Invalid code.")
-                    Return View(model)
+                    Me.ModelState.AddModelError("", "Invalid code.")
+                    Return Me.View(model)
             End Select
         End Function
 
         '
         ' GET: /Account/Register
-        <AllowAnonymous> _
+        <System.Web.Mvc.AllowAnonymousAttribute>
         Public Function Register() As ActionResult
-            Return View()
+            Return Me.View()
         End Function
 
         '
         ' POST: /Account/Register
-        <HttpPost, AllowAnonymous, ValidateAntiForgeryToken> _
-        Public Async Function Register(ByVal model As RegisterViewModel) As Task(Of ActionResult)
-            If ModelState.IsValid Then
-
-                Dim user_Renamed = New ApplicationUser With {.UserName = model.Email, .Email = model.Email}
-                Dim result = Await UserManager.CreateAsync(user_Renamed, model.Password)
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
+        Public Async Function Register(ByVal model As AuthorizationService.Models.RegisterViewModel) As Task(Of System.Web.Mvc.ActionResult)
+            If Me.ModelState.IsValid Then
+                Dim user = New AuthorizationService.Models.ApplicationUser With {.UserName = model.Email, .Email = model.Email}
+                Dim result = Await Me.UserManager.CreateAsync(user, model.Password)
                 If result.Succeeded Then
-                    Await SignInManager.SignInAsync(user_Renamed, isPersistent:=False, rememberBrowser:=False)
-
+                    Await Me.SignInManager.SignInAsync(user, isPersistent:=False, rememberBrowser:=False)
                     ' For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     ' Send an email with this link
                     ' string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     ' var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     ' await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    Return RedirectToAction("Index", "Home")
+                    Return Me.RedirectToAction("Index", "Home")
                 End If
-                AddErrors(result)
+
+                Me.AddErrors(result)
             End If
 
             ' If we got this far, something failed, redisplay form
-            Return View(model)
+            Return Me.View(model)
         End Function
 
         '
         ' GET: /Account/ConfirmEmail
-        <AllowAnonymous> _
-        Public Async Function ConfirmEmail(ByVal userId As String, ByVal code As String) As Task(Of ActionResult)
-            If userId Is Nothing OrElse code Is Nothing Then
-                Return View("Error")
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        Public Async Function ConfirmEmail(ByVal userId As String, ByVal code As String) As Task(Of System.Web.Mvc.ActionResult)
+            If Equals(userId, Nothing) OrElse Equals(code, Nothing) Then
+                Return Me.View("Error")
             End If
-            Dim result = Await UserManager.ConfirmEmailAsync(userId, code)
-            Return View(If(result.Succeeded, "ConfirmEmail", "Error"))
+
+            Dim result = Await Me.UserManager.ConfirmEmailAsync(userId, code)
+            Return Me.View(If(result.Succeeded, "ConfirmEmail", "Error"))
         End Function
 
         '
         ' GET: /Account/ForgotPassword
-        <AllowAnonymous> _
+        <System.Web.Mvc.AllowAnonymousAttribute>
         Public Function ForgotPassword() As ActionResult
-            Return View()
+            Return Me.View()
         End Function
 
         '
         ' POST: /Account/ForgotPassword
-        <HttpPost, AllowAnonymous, ValidateAntiForgeryToken> _
-        Public Async Function ForgotPassword(ByVal model As ForgotPasswordViewModel) As Task(Of ActionResult)
-            If ModelState.IsValid Then
-
-                Dim user_Renamed = Await UserManager.FindByNameAsync(model.Email)
-                If user_Renamed Is Nothing OrElse Not(Await UserManager.IsEmailConfirmedAsync(user_Renamed.Id)) Then
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
+        Public Async Function ForgotPassword(ByVal model As AuthorizationService.Models.ForgotPasswordViewModel) As Task(Of System.Web.Mvc.ActionResult)
+            If Me.ModelState.IsValid Then
+                Dim user = Await Me.UserManager.FindByNameAsync(model.Email)
+                If user Is Nothing OrElse Not(Await Me.UserManager.IsEmailConfirmedAsync(user.Id)) Then
                     ' Don't reveal that the user does not exist or is not confirmed
-                    Return View("ForgotPasswordConfirmation")
+                    Return Me.View("ForgotPasswordConfirmation")
                 End If
-
-                ' For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                ' Send an email with this link
-                ' string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                ' var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                ' await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                ' return RedirectToAction("ForgotPasswordConfirmation", "Account");
+            ' For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+            ' Send an email with this link
+            ' string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            ' var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+            ' await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            ' return RedirectToAction("ForgotPasswordConfirmation", "Account");
             End If
 
             ' If we got this far, something failed, redisplay form
-            Return View(model)
+            Return Me.View(model)
         End Function
 
         '
         ' GET: /Account/ForgotPasswordConfirmation
-        <AllowAnonymous> _
+        <System.Web.Mvc.AllowAnonymousAttribute>
         Public Function ForgotPasswordConfirmation() As ActionResult
-            Return View()
+            Return Me.View()
         End Function
 
         '
         ' GET: /Account/ResetPassword
-        <AllowAnonymous> _
+        <System.Web.Mvc.AllowAnonymousAttribute>
         Public Function ResetPassword(ByVal code As String) As ActionResult
-            Return If(code Is Nothing, View("Error"), View())
+            Return If(Equals(code, Nothing), Me.View("Error"), Me.View())
         End Function
 
         '
         ' POST: /Account/ResetPassword
-        <HttpPost, AllowAnonymous, ValidateAntiForgeryToken> _
-        Public Async Function ResetPassword(ByVal model As ResetPasswordViewModel) As Task(Of ActionResult)
-            If Not ModelState.IsValid Then
-                Return View(model)
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
+        Public Async Function ResetPassword(ByVal model As AuthorizationService.Models.ResetPasswordViewModel) As Task(Of System.Web.Mvc.ActionResult)
+            If Not Me.ModelState.IsValid Then
+                Return Me.View(model)
             End If
 
-            Dim user_Renamed = Await UserManager.FindByNameAsync(model.Email)
-            If user_Renamed Is Nothing Then
+            Dim user = Await Me.UserManager.FindByNameAsync(model.Email)
+            If user Is Nothing Then
                 ' Don't reveal that the user does not exist
-                Return RedirectToAction("ResetPasswordConfirmation", "Account")
+                Return Me.RedirectToAction("ResetPasswordConfirmation", "Account")
             End If
-            Dim result = Await UserManager.ResetPasswordAsync(user_Renamed.Id, model.Code, model.Password)
+
+            Dim result = Await Me.UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password)
             If result.Succeeded Then
-                Return RedirectToAction("ResetPasswordConfirmation", "Account")
+                Return Me.RedirectToAction("ResetPasswordConfirmation", "Account")
             End If
-            AddErrors(result)
-            Return View()
+
+            Me.AddErrors(result)
+            Return Me.View()
         End Function
 
         '
         ' GET: /Account/ResetPasswordConfirmation
-        <AllowAnonymous> _
+        <System.Web.Mvc.AllowAnonymousAttribute>
         Public Function ResetPasswordConfirmation() As ActionResult
-            Return View()
+            Return Me.View()
         End Function
 
         '
         ' POST: /Account/ExternalLogin
-        <HttpPost, AllowAnonymous, ValidateAntiForgeryToken> _
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
         Public Function ExternalLogin(ByVal provider As String, ByVal returnUrl As String) As ActionResult
             ' Request a redirect to the external login provider
-            Return New ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", New With {Key .ReturnUrl = returnUrl}))
+            Return New AuthorizationService.Controllers.AccountController.ChallengeResult(provider, Me.Url.Action("ExternalLoginCallback", "Account", New With {.ReturnUrl = returnUrl}))
         End Function
 
         '
         ' GET: /Account/SendCode
-        <AllowAnonymous> _
-        Public Async Function SendCode(ByVal returnUrl As String, ByVal rememberMe As Boolean) As Task(Of ActionResult)
-            Dim userId = Await SignInManager.GetVerifiedUserIdAsync()
-            If userId Is Nothing Then
-                Return View("Error")
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        Public Async Function SendCode(ByVal returnUrl As String, ByVal rememberMe As Boolean) As Task(Of System.Web.Mvc.ActionResult)
+            Dim userId = Await Me.SignInManager.GetVerifiedUserIdAsync()
+            If Equals(userId, Nothing) Then
+                Return Me.View("Error")
             End If
-            Dim userFactors = Await UserManager.GetValidTwoFactorProvidersAsync(userId)
-            Dim factorOptions = userFactors.Select(Function(purpose) New SelectListItem With {.Text = purpose, .Value = purpose}).ToList()
-            Return View(New SendCodeViewModel With {.Providers = factorOptions, .ReturnUrl = returnUrl, .RememberMe = rememberMe})
+
+            Dim userFactors = Await Me.UserManager.GetValidTwoFactorProvidersAsync(userId)
+            Dim factorOptions = userFactors.[Select](Function(purpose) New System.Web.Mvc.SelectListItem With {.Text = purpose, .Value = purpose}).ToList()
+            Return Me.View(New AuthorizationService.Models.SendCodeViewModel With {.Providers = factorOptions, .ReturnUrl = returnUrl, .RememberMe = rememberMe})
         End Function
 
         '
         ' POST: /Account/SendCode
-        <HttpPost, AllowAnonymous, ValidateAntiForgeryToken> _
-        Public Async Function SendCode(ByVal model As SendCodeViewModel) As Task(Of ActionResult)
-            If Not ModelState.IsValid Then
-                Return View()
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
+        Public Async Function SendCode(ByVal model As AuthorizationService.Models.SendCodeViewModel) As Task(Of System.Web.Mvc.ActionResult)
+            If Not Me.ModelState.IsValid Then
+                Return Me.View()
             End If
 
             ' Generate the token and send it
-            If Not(Await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider)) Then
-                Return View("Error")
+            If Not(Await Me.SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider)) Then
+                Return Me.View("Error")
             End If
-            Return RedirectToAction("VerifyCode", New With {Key .Provider = model.SelectedProvider, Key .ReturnUrl = model.ReturnUrl, Key .RememberMe = model.RememberMe})
+
+            Return Me.RedirectToAction("VerifyCode", New With {.Provider = model.SelectedProvider, .ReturnUrl = model.ReturnUrl, .RememberMe = model.RememberMe})
         End Function
 
         '
         ' GET: /Account/ExternalLoginCallback
-        <AllowAnonymous> _
-        Public Async Function ExternalLoginCallback(ByVal returnUrl As String) As Task(Of ActionResult)
-            Dim loginInfo = Await AuthenticationManager.GetExternalLoginInfoAsync()
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        Public Async Function ExternalLoginCallback(ByVal returnUrl As String) As Task(Of System.Web.Mvc.ActionResult)
+            Dim loginInfo = Await Me.AuthenticationManager.GetExternalLoginInfoAsync()
             If loginInfo Is Nothing Then
-                Return RedirectToAction("Login")
+                Return Me.RedirectToAction("Login")
             End If
 
             ' Sign in the user with this external login provider if the user already has a login
-            Dim result = Await SignInManager.ExternalSignInAsync(loginInfo, isPersistent:= False)
+            Dim result = Await Me.SignInManager.ExternalSignInAsync(loginInfo, isPersistent:=False)
             Select Case result
-                Case SignInStatus.Success
-                    Return RedirectToLocal(returnUrl)
-                Case SignInStatus.LockedOut
-                    Return View("Lockout")
-                Case SignInStatus.RequiresVerification
-                    Return RedirectToAction("SendCode", New With {Key .ReturnUrl = returnUrl, Key .RememberMe = False})
+                Case Microsoft.AspNet.Identity.Owin.SignInStatus.Success
+                    Return Me.RedirectToLocal(returnUrl)
+                Case Microsoft.AspNet.Identity.Owin.SignInStatus.LockedOut
+                    Return Me.View("Lockout")
+                Case Microsoft.AspNet.Identity.Owin.SignInStatus.RequiresVerification
+                    Return Me.RedirectToAction("SendCode", New With {.ReturnUrl = returnUrl, .RememberMe = False})
                 Case Else
                     ' If the user does not have an account, then prompt the user to create an account
-                    ViewData("ReturnUrl") = returnUrl
-                    ViewData("LoginProvider") = loginInfo.Login.LoginProvider
-                    Return View("ExternalLoginConfirmation", New ExternalLoginConfirmationViewModel With {.Email = loginInfo.Email})
+                    Me.ViewData("ReturnUrl") = returnUrl
+                    Me.ViewData("LoginProvider") = loginInfo.Login.LoginProvider
+                    Return Me.View("ExternalLoginConfirmation", New AuthorizationService.Models.ExternalLoginConfirmationViewModel With {.Email = loginInfo.Email})
             End Select
         End Function
 
         '
         ' POST: /Account/ExternalLoginConfirmation
-        <HttpPost, AllowAnonymous, ValidateAntiForgeryToken> _
-        Public Async Function ExternalLoginConfirmation(ByVal model As ExternalLoginConfirmationViewModel, ByVal returnUrl As String) As Task(Of ActionResult)
-            If User.Identity.IsAuthenticated Then
-                Return RedirectToAction("Index", "Manage")
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.AllowAnonymousAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
+        Public Async Function ExternalLoginConfirmation(ByVal model As AuthorizationService.Models.ExternalLoginConfirmationViewModel, ByVal returnUrl As String) As Task(Of System.Web.Mvc.ActionResult)
+            If Me.User.Identity.IsAuthenticated Then
+                Return Me.RedirectToAction("Index", "Manage")
             End If
 
-            If ModelState.IsValid Then
+            If Me.ModelState.IsValid Then
                 ' Get the information about the user from the external login provider
-                Dim info = Await AuthenticationManager.GetExternalLoginInfoAsync()
+                Dim info = Await Me.AuthenticationManager.GetExternalLoginInfoAsync()
                 If info Is Nothing Then
-                    Return View("ExternalLoginFailure")
+                    Return Me.View("ExternalLoginFailure")
                 End If
 
-                Dim user_Renamed = New ApplicationUser With {.UserName = model.Email, .Email = model.Email}
-                Dim result = Await UserManager.CreateAsync(user_Renamed)
+                Dim user = New AuthorizationService.Models.ApplicationUser With {.UserName = model.Email, .Email = model.Email}
+                Dim result = Await Me.UserManager.CreateAsync(user)
                 If result.Succeeded Then
-                    result = Await UserManager.AddLoginAsync(user_Renamed.Id, info.Login)
+                    result = Await Me.UserManager.AddLoginAsync(user.Id, info.Login)
                     If result.Succeeded Then
-                        Await SignInManager.SignInAsync(user_Renamed, isPersistent:= False, rememberBrowser:= False)
-                        Return RedirectToLocal(returnUrl)
+                        Await Me.SignInManager.SignInAsync(user, isPersistent:=False, rememberBrowser:=False)
+                        Return Me.RedirectToLocal(returnUrl)
                     End If
                 End If
-                AddErrors(result)
+
+                Me.AddErrors(result)
             End If
 
-            ViewData("ReturnUrl") = returnUrl
-            Return View(model)
+            Me.ViewData("ReturnUrl") = returnUrl
+            Return Me.View(model)
         End Function
 
         '
         ' POST: /Account/LogOff
-        <HttpPost, ValidateAntiForgeryToken> _
+        <System.Web.Mvc.HttpPostAttribute>
+        <System.Web.Mvc.ValidateAntiForgeryTokenAttribute>
         Public Function LogOff() As ActionResult
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie)
-            Return RedirectToAction("Index", "Home")
+            Me.AuthenticationManager.SignOut(Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie)
+            Return Me.RedirectToAction("Index", "Home")
         End Function
 
         '
         ' GET: /Account/ExternalLoginFailure
-        <AllowAnonymous> _
+        <System.Web.Mvc.AllowAnonymousAttribute>
         Public Function ExternalLoginFailure() As ActionResult
-            Return View()
+            Return Me.View()
         End Function
 
         Protected Overrides Sub Dispose(ByVal disposing As Boolean)
             If disposing Then
-                If _userManager IsNot Nothing Then
-                    _userManager.Dispose()
-                    _userManager = Nothing
+                If Me._userManager IsNot Nothing Then
+                    Me._userManager.Dispose()
+                    Me._userManager = Nothing
                 End If
 
-                If _signInManager IsNot Nothing Then
-                    _signInManager.Dispose()
-                    _signInManager = Nothing
+                If Me._signInManager IsNot Nothing Then
+                    Me._signInManager.Dispose()
+                    Me._signInManager = Nothing
                 End If
             End If
 
             MyBase.Dispose(disposing)
         End Sub
 
-        #Region "Helpers"
+#Region "Helpers"
         ' Used for XSRF protection when adding external logins
         Private Const XsrfKey As String = "XsrfId"
 
-        Private ReadOnly Property AuthenticationManager() As IAuthenticationManager
+        Private ReadOnly Property AuthenticationManager As IAuthenticationManager
             Get
-                Return HttpContext.GetOwinContext().Authentication
+                Return System.Web.HttpContextBaseExtensions.GetOwinContext(Me.HttpContext).Authentication
             End Get
         End Property
 
-        Private Sub AddErrors(ByVal result As IdentityResult)
+        Private Sub AddErrors(ByVal result As Microsoft.AspNet.Identity.IdentityResult)
             For Each [error] In result.Errors
-                ModelState.AddModelError("", [error])
-            Next [error]
+                Me.ModelState.AddModelError("", [error])
+            Next
         End Sub
 
         Private Function RedirectToLocal(ByVal returnUrl As String) As ActionResult
-            If Url.IsLocalUrl(returnUrl) Then
-                Return Redirect(returnUrl)
+            If Me.Url.IsLocalUrl(returnUrl) Then
+                Return Me.Redirect(returnUrl)
             End If
-            Return RedirectToAction("Index", "Home")
+
+            Return Me.RedirectToAction("Index", "Home")
         End Function
 
         Friend Class ChallengeResult
-            Inherits HttpUnauthorizedResult
+            Inherits System.Web.Mvc.HttpUnauthorizedResult
 
             Public Sub New(ByVal provider As String, ByVal redirectUri As String)
                 Me.New(provider, redirectUri, Nothing)
             End Sub
 
             Public Sub New(ByVal provider As String, ByVal redirectUri As String, ByVal userId As String)
-                LoginProvider = provider
+                Me.LoginProvider = provider
                 Me.RedirectUri = redirectUri
                 Me.UserId = userId
             End Sub
 
-            Public Property LoginProvider() As String
-            Public Property RedirectUri() As String
-            Public Property UserId() As String
+            Public Property LoginProvider As String
 
-            Public Overrides Sub ExecuteResult(ByVal context As ControllerContext)
-                Dim properties = New AuthenticationProperties With {.RedirectUri = RedirectUri}
-                If UserId IsNot Nothing Then
-                    properties.Dictionary(XsrfKey) = UserId
+            Public Property RedirectUri As String
+
+            Public Property UserId As String
+
+            Public Overrides Sub ExecuteResult(ByVal context As System.Web.Mvc.ControllerContext)
+                Dim properties = New Microsoft.Owin.Security.AuthenticationProperties With {.RedirectUri = Me.RedirectUri}
+                If Not Equals(Me.UserId, Nothing) Then
+                    properties.Dictionary(AuthorizationService.Controllers.AccountController.XsrfKey) = Me.UserId
                 End If
-                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider)
+
+                System.Web.HttpContextBaseExtensions.GetOwinContext(context.HttpContext).Authentication.Challenge(properties, Me.LoginProvider)
             End Sub
         End Class
-        #End Region
+#End Region
     End Class
 End Namespace
