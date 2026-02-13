@@ -17,7 +17,7 @@ This example illustrates how to restrict access to specific reports and document
 * [OperationLogger.cs](CS/AuthorizationService/Services/OperationLogger.cs)
 * [Global.asax](CS/AuthorizationService/Global.asax)
 <!-- feedback -->
-## Does this example address your development requirements/objectives?
+## Does This Example Address Your Development Requirements/Objectives?
 
 [<img src="https://www.devexpress.com/support/examples/i/yes-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=reporting-mvc-implement-a-custom-authorization-service&~~~was_helpful=yes) [<img src="https://www.devexpress.com/support/examples/i/no-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=reporting-mvc-implement-a-custom-authorization-service&~~~was_helpful=no)
 
